@@ -3,16 +3,60 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleVoc", "SimpleVoc\SimpleVoc.csproj", "{07BE486F-E670-4217-B410-EC21D73458A3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleVocTests", "SimpleVocTests\SimpleVocTests.csproj", "{938D01C2-72D3-48E9-8D17-E3A755A2E1FF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F1B26736-EC0E-4926-ACDE-95EF3BF2A836}"
+	ProjectSection(SolutionItems) = preProject
+		Local.testsettings = Local.testsettings
+		SimpleVoc.vsmdi = SimpleVoc.vsmdi
+		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleVocSpeed", "SimpleVocSpeed\SimpleVocSpeed.csproj", "{A646DC3F-D4A2-4E6B-BEBB-4CA72E5D30E3}"
+EndProject
 Global
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = SimpleVoc.vsmdi
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Debug|Mixed Platforms = Debug|Mixed Platforms
+		Debug|x86 = Debug|x86
 		Release|Any CPU = Release|Any CPU
+		Release|Mixed Platforms = Release|Mixed Platforms
+		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{07BE486F-E670-4217-B410-EC21D73458A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{07BE486F-E670-4217-B410-EC21D73458A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07BE486F-E670-4217-B410-EC21D73458A3}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{07BE486F-E670-4217-B410-EC21D73458A3}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{07BE486F-E670-4217-B410-EC21D73458A3}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{07BE486F-E670-4217-B410-EC21D73458A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{07BE486F-E670-4217-B410-EC21D73458A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{07BE486F-E670-4217-B410-EC21D73458A3}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{07BE486F-E670-4217-B410-EC21D73458A3}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{07BE486F-E670-4217-B410-EC21D73458A3}.Release|x86.ActiveCfg = Release|Any CPU
+		{938D01C2-72D3-48E9-8D17-E3A755A2E1FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{938D01C2-72D3-48E9-8D17-E3A755A2E1FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{938D01C2-72D3-48E9-8D17-E3A755A2E1FF}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{938D01C2-72D3-48E9-8D17-E3A755A2E1FF}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{938D01C2-72D3-48E9-8D17-E3A755A2E1FF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{938D01C2-72D3-48E9-8D17-E3A755A2E1FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{938D01C2-72D3-48E9-8D17-E3A755A2E1FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{938D01C2-72D3-48E9-8D17-E3A755A2E1FF}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{938D01C2-72D3-48E9-8D17-E3A755A2E1FF}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{938D01C2-72D3-48E9-8D17-E3A755A2E1FF}.Release|x86.ActiveCfg = Release|Any CPU
+		{A646DC3F-D4A2-4E6B-BEBB-4CA72E5D30E3}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{A646DC3F-D4A2-4E6B-BEBB-4CA72E5D30E3}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{A646DC3F-D4A2-4E6B-BEBB-4CA72E5D30E3}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{A646DC3F-D4A2-4E6B-BEBB-4CA72E5D30E3}.Debug|x86.ActiveCfg = Debug|x86
+		{A646DC3F-D4A2-4E6B-BEBB-4CA72E5D30E3}.Debug|x86.Build.0 = Debug|x86
+		{A646DC3F-D4A2-4E6B-BEBB-4CA72E5D30E3}.Release|Any CPU.ActiveCfg = Release|x86
+		{A646DC3F-D4A2-4E6B-BEBB-4CA72E5D30E3}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{A646DC3F-D4A2-4E6B-BEBB-4CA72E5D30E3}.Release|Mixed Platforms.Build.0 = Release|x86
+		{A646DC3F-D4A2-4E6B-BEBB-4CA72E5D30E3}.Release|x86.ActiveCfg = Release|x86
+		{A646DC3F-D4A2-4E6B-BEBB-4CA72E5D30E3}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
