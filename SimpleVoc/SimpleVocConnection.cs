@@ -41,12 +41,28 @@ namespace SimpleVoc
 
         public async Task<string[]> GetKeysAsync(string prefix)
         {
+            if (string.IsNullOrWhiteSpace(prefix))
+            {
+                throw new ArgumentException("Prefix can't be empty!");
+            }
+
             var req = CreateRequest("keys/" + prefix);
 
-            using (var res = (HttpWebResponse)await req.GetResponseAsync())
+            try
             {
-                var result = _serializer.Deserialize<string[]>(GetResponseData(res));
-                return result;
+                using (var res = (HttpWebResponse)await req.GetResponseAsync())
+                {
+                    var result = _serializer.Deserialize<string[]>(GetResponseData(res));
+                    return result;
+                }
+            }
+            catch (WebException ex)
+            {
+                var svEx = ConvertToSimpleVocException(ex);
+
+                if (svEx.Message == "prefix not found") return new string[] { };
+
+                throw svEx;
             }
         }
 
@@ -142,21 +158,7 @@ namespace SimpleVoc
         /// <returns>true on success</returns>
         public bool Set(SimpleVocValue value)
         {
-            if (string.IsNullOrWhiteSpace(value.Key))
-            {
-                throw new ArgumentException("Key can't be empty!");
-            }
-
-            var req = CreateRequest("value/" + value.Key);
-                req.Method = "POST"; // Set uses "POST"
-                req.Headers.Add("x-voc-flags", value.Flags.ToString());
-
-            // Set expires header if given
-            if (value.Expires != DateTime.MinValue)
-            {
-                // Convert to ISO 8601
-                req.Headers.Add("x-voc-expires", value.Expires.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ"));
-            }
+            var req = CreateRequestForSet(value);
 
             try
             {
@@ -171,6 +173,39 @@ namespace SimpleVoc
 
                     // If an error occurs a WebException is thrown
                     var res = (HttpWebResponse)req.GetResponse();
+                        res.Close();
+                }
+            }
+            catch (WebException ex)
+            {
+                throw ConvertToSimpleVocException(ex);
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Asynchronously save a SimpleVoc value on a SimpleVoc server.
+        /// </summary>
+        /// <param name="value">The SimpleVoc value to save.</param>
+        /// <returns>true on success</returns>
+        public async Task<bool> SetAsync(SimpleVocValue value)
+        {
+            var req = CreateRequestForSet(value);
+
+            try
+            {
+                using (var reqStream = await req.GetRequestStreamAsync())
+                {
+                    // Convert string to bytes
+                    if (value.Data != null)
+                    {
+                        byte[] dataToWrite = Encoding.UTF8.GetBytes(value.Data);
+                        await reqStream.WriteAsync(dataToWrite, 0, dataToWrite.Length);
+                    }
+
+                    // If an error occurs a WebException is thrown
+                    var res = (HttpWebResponse) await req.GetResponseAsync();
                         res.Close();
                 }
             }
@@ -226,6 +261,32 @@ namespace SimpleVoc
                 request.UserAgent = "Alex-SimpleVoc/0.1";
 
             return request;
+        }
+
+        /// <summary>
+        /// Create a HttpWebRequest for a SET (POST) operation with given value.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        private HttpWebRequest CreateRequestForSet(SimpleVocValue value)
+        {
+            if (string.IsNullOrWhiteSpace(value.Key))
+            {
+                throw new ArgumentException("Key can't be empty!");
+            }
+
+            var req = CreateRequest("value/" + value.Key);
+                req.Method = "POST"; // Set uses "POST"
+                req.Headers.Add("x-voc-flags", value.Flags.ToString());
+
+            // Set expires header if given
+            if (value.Expires != DateTime.MinValue)
+            {
+                // Convert to ISO 8601
+                req.Headers.Add("x-voc-expires", value.Expires.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ"));
+            }
+
+            return req;
         }
 
         /// <summary>
