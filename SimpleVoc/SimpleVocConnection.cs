@@ -52,7 +52,7 @@ namespace SimpleVoc
             {
                 using (var res = (HttpWebResponse)await req.GetResponseAsync())
                 {
-                    var result = _serializer.Deserialize<string[]>(GetResponseData(res));
+                    var result = _serializer.Deserialize<string[]>(await GetResponseDataAsync(res));
                     return result;
                 }
             }
@@ -115,7 +115,7 @@ namespace SimpleVoc
             {
                 using (var res = (HttpWebResponse)await req.GetResponseAsync())
                 {
-                    return GetValueFromResponse(res, key);
+                    return await GetValueFromResponseAsync(res, key);
                 }
             }
             catch (WebException ex)
@@ -250,6 +250,24 @@ namespace SimpleVoc
         }
 
         /// <summary>
+        /// Create a SimpleVoc value from a WebResponse for a given key asynchronously
+        /// </summary>
+        /// <param name="res"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        private async Task<SimpleVocValue> GetValueFromResponseAsync(HttpWebResponse res, string key)
+        {
+            return new SimpleVocValue
+            {
+                Key = key,
+                Data = await GetResponseDataAsync(res),
+                Created = DateTime.Parse(res.GetResponseHeader("x-voc-created")),
+                Expires = !string.IsNullOrWhiteSpace(res.GetResponseHeader("x-voc-expires")) ? DateTime.Parse(res.GetResponseHeader("x-voc-expires")) : DateTime.MinValue,
+                Flags = int.Parse(res.GetResponseHeader("x-voc-flags"))
+            };
+        }
+
+        /// <summary>
         /// Create a HttpWebRequest for given path and set some common headers.
         /// </summary>
         /// <param name="path">The path to the resource</param>
@@ -287,6 +305,19 @@ namespace SimpleVoc
             }
 
             return req;
+        }
+
+        /// <summary>
+        /// Read data from response stream asynchronously
+        /// </summary>
+        /// <param name="res">The HttpWebResponse</param>
+        /// <returns>Response as a string</returns>
+        private async Task<string> GetResponseDataAsync(HttpWebResponse res)
+        {
+            using (var stream = new StreamReader(res.GetResponseStream(), Encoding.UTF8))
+            {
+                return await stream.ReadToEndAsync();
+            }
         }
 
         /// <summary>

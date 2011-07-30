@@ -120,5 +120,45 @@ namespace SimpleVocTests
             result = _simpleVoc.GetKeys("A");
             Assert.AreEqual(result.Length, 0);
         }
+
+        [TestMethod]
+        public void Test_GetKeysAsync()
+        {
+            _simpleVoc.Set(new SimpleVocValue() { Key = "TestKey" });
+            _simpleVoc.Set(new SimpleVocValue() { Key = "TestCey" });
+
+            var result = _simpleVoc.GetKeysAsync("T");
+            var result2 = _simpleVoc.GetKeysAsync("TestK");
+            var result3 = _simpleVoc.GetKeysAsync("A");
+
+            // Wo don't need to call Wait here because "Result" does it automatically if the result is still missing
+            Assert.AreEqual(result.Result.Length, 2);
+            Assert.AreEqual(result2.Result.Length, 1);
+            Assert.AreEqual(result3.Result.Length, 0);
+        }
+
+        [TestMethod]
+        public void Test_SetAsync_And_GetAsync()
+        {
+            var expires = DateTime.Now.AddDays(1);
+
+            var testData = new SimpleVocValue()
+            {
+                Key = "TestGetKey",
+                Data = "♥ Some random Data ♥",
+                Flags = 123,
+                Expires = expires
+            };
+
+            // Calling wait here to wait on finishing the Task
+            _simpleVoc.SetAsync(testData).Wait();
+
+            var result = _simpleVoc.GetAsync(testData.Key);
+
+            Assert.AreEqual(testData.Key, result.Result.Key);
+            Assert.AreEqual(testData.Data, result.Result.Data);
+            Assert.AreEqual(testData.Flags, result.Result.Flags);
+            Assert.AreEqual(testData.Expires.ToString(), result.Result.Expires.ToString());
+        }
     }
 }
