@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SimpleVoc;
+using System.Collections.Generic;
 
 namespace SimpleVocTests
 {
@@ -131,7 +132,7 @@ namespace SimpleVocTests
             var result2 = _simpleVoc.GetKeysAsync("TestK");
             var result3 = _simpleVoc.GetKeysAsync("A");
 
-            // Wo don't need to call Wait here because "Result" does it automatically if the result is still missing
+            // Wo don't need to call Wait here because ".Result" does it automatically if the result is still missing
             Assert.AreEqual(result.Result.Length, 2);
             Assert.AreEqual(result2.Result.Length, 1);
             Assert.AreEqual(result3.Result.Length, 0);
@@ -159,6 +160,27 @@ namespace SimpleVocTests
             Assert.AreEqual(testData.Data, result.Result.Data);
             Assert.AreEqual(testData.Flags, result.Result.Flags);
             Assert.AreEqual(testData.Expires.ToString(), result.Result.Expires.ToString());
+        }
+
+        [TestMethod]
+        public void Test_Extended_Filter()
+        {
+            _simpleVoc.Set(new SimpleVocValue()
+            {
+                Key = "TestKey",
+                Extended = new Dictionary<string, string>()
+                {
+                    { "type", "TestType"}
+                }
+            });
+            _simpleVoc.Set(new SimpleVocValue() { Key = "TestCey" });
+
+            var filter = "type==\"TestType\"";
+            var result = _simpleVoc.GetKeysAsync("T", filter);
+
+            // Wo don't need to call Wait here because ".Result" does it automatically if the result is still missing
+            Assert.AreEqual(result.Result.Length, 1);
+            Assert.AreEqual(result.Result[0], "TestKey");
         }
     }
 }

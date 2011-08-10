@@ -39,14 +39,20 @@ namespace SimpleVoc
         public SimpleVocConnection(int port) : this("localhost", port) { }
         public SimpleVocConnection() : this("localhost", 8008) { }
 
-        public async Task<string[]> GetKeysAsync(string prefix)
+        /// <summary>
+        /// Return a list of Keys for the given prefix
+        /// </summary>
+        /// <param name="prefix">A prefix the Keys start with</param>
+        /// <param name="filter">A filter parameter see http://www.worldofvoc.com/wiki/index.php5/SVOC:Concepts_Attributes#Filtering_by_Attributes </param>
+        /// <returns>A List of keys</returns>
+        public async Task<string[]> GetKeysAsync(string prefix, string filter = null)
         {
             if (string.IsNullOrWhiteSpace(prefix))
             {
                 throw new ArgumentException("Prefix can't be empty!");
             }
 
-            var req = CreateRequest("keys/" + prefix);
+            var req = CreateRequest("keys/" + prefix + ((filter != null) ? "?filter=" + filter : ""));
 
             try
             {
@@ -70,15 +76,16 @@ namespace SimpleVoc
         /// Return a list of Keys for the given prefix
         /// </summary>
         /// <param name="prefix">A prefix the Keys start with</param>
+        /// <param name="filter">A filter parameter see http://www.worldofvoc.com/wiki/index.php5/SVOC:Concepts_Attributes#Filtering_by_Attributes </param>
         /// <returns>A List of keys</returns>
-        public string[] GetKeys(string prefix)
+        public string[] GetKeys(string prefix, string filter = null)
         {
             if (string.IsNullOrWhiteSpace(prefix))
             {
                 throw new ArgumentException("Prefix can't be empty!");
             }
 
-            var req = CreateRequest("keys/" + prefix);
+            var req = CreateRequest("keys/" + prefix + ((filter != null) ? "?filter=" + filter : ""));
 
             try
             {
@@ -245,7 +252,8 @@ namespace SimpleVoc
                 Data = GetResponseData(res),
                 Created = DateTime.Parse(res.GetResponseHeader("x-voc-created")),
                 Expires = !string.IsNullOrWhiteSpace(res.GetResponseHeader("x-voc-expires")) ? DateTime.Parse(res.GetResponseHeader("x-voc-expires")) : DateTime.MinValue,
-                Flags = int.Parse(res.GetResponseHeader("x-voc-flags"))
+                Flags = int.Parse(res.GetResponseHeader("x-voc-flags")),
+                Extended = !string.IsNullOrWhiteSpace(res.GetResponseHeader("x-voc-extended")) ? _serializer.DeserializeObject(res.GetResponseHeader("x-voc-extended")) : null
             };
         }
 
@@ -263,7 +271,8 @@ namespace SimpleVoc
                 Data = await GetResponseDataAsync(res),
                 Created = DateTime.Parse(res.GetResponseHeader("x-voc-created")),
                 Expires = !string.IsNullOrWhiteSpace(res.GetResponseHeader("x-voc-expires")) ? DateTime.Parse(res.GetResponseHeader("x-voc-expires")) : DateTime.MinValue,
-                Flags = int.Parse(res.GetResponseHeader("x-voc-flags"))
+                Flags = int.Parse(res.GetResponseHeader("x-voc-flags")),
+                Extended = !string.IsNullOrWhiteSpace(res.GetResponseHeader("x-voc-extended")) ? _serializer.DeserializeObject(res.GetResponseHeader("x-voc-extended")) : null
             };
         }
 
@@ -296,6 +305,10 @@ namespace SimpleVoc
             var req = CreateRequest("value/" + value.Key);
                 req.Method = "POST"; // Set uses "POST"
                 req.Headers.Add("x-voc-flags", value.Flags.ToString());
+            
+            if (value.Extended != null) {
+                req.Headers.Add("x-voc-extended", _serializer.Serialize(value.Extended));
+            }
 
             // Set expires header if given
             if (value.Expires != DateTime.MinValue)
