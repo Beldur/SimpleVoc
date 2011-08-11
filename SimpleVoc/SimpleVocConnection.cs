@@ -253,7 +253,7 @@ namespace SimpleVoc
                 Created = DateTime.Parse(res.GetResponseHeader("x-voc-created")),
                 Expires = !string.IsNullOrWhiteSpace(res.GetResponseHeader("x-voc-expires")) ? DateTime.Parse(res.GetResponseHeader("x-voc-expires")) : DateTime.MinValue,
                 Flags = int.Parse(res.GetResponseHeader("x-voc-flags")),
-                Extended = !string.IsNullOrWhiteSpace(res.GetResponseHeader("x-voc-extended")) ? _serializer.DeserializeObject(res.GetResponseHeader("x-voc-extended")) : null
+                Extended = !string.IsNullOrWhiteSpace(res.GetResponseHeader("x-voc-extended")) ? (Dictionary<string, string>)_serializer.DeserializeObject(res.GetResponseHeader("x-voc-extended")) : null
             };
         }
 
@@ -272,7 +272,7 @@ namespace SimpleVoc
                 Created = DateTime.Parse(res.GetResponseHeader("x-voc-created")),
                 Expires = !string.IsNullOrWhiteSpace(res.GetResponseHeader("x-voc-expires")) ? DateTime.Parse(res.GetResponseHeader("x-voc-expires")) : DateTime.MinValue,
                 Flags = int.Parse(res.GetResponseHeader("x-voc-flags")),
-                Extended = !string.IsNullOrWhiteSpace(res.GetResponseHeader("x-voc-extended")) ? _serializer.DeserializeObject(res.GetResponseHeader("x-voc-extended")) : null
+                Extended = !string.IsNullOrWhiteSpace(res.GetResponseHeader("x-voc-extended")) ? (Dictionary<string, string>)_serializer.DeserializeObject(res.GetResponseHeader("x-voc-extended")) : null
             };
         }
 

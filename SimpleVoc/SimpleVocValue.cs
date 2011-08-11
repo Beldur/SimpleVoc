@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using System.Collections.Generic;
 
 namespace SimpleVoc
 {
@@ -10,6 +11,6 @@ namespace SimpleVoc
         public int Flags { get; set; }
         public string Data { get; set; }
         public string Key { get; set; }
-        public object Extended { get; set; }
+        public Dictionary<string, string> Extended { get; set; }
     }
 }
