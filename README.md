@@ -21,4 +21,4 @@ Uses [Visual Studio Async CTP](http://msdn.microsoft.com/en-us/vstudio/gg316360)
 	// Get keys
 	var user = _simpleVoc.GetKeys("User");
 	
-For asynchronous access you can use SetAsync, GetAsync and GetKeysAsync wich returns a of Task<T>.
+For asynchronous access you can use SetAsync, GetAsync and GetKeysAsync wich returns a of `Task<T>`.
