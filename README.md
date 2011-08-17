@@ -15,10 +15,10 @@ Uses [Visual Studio Async CTP](http://msdn.microsoft.com/en-us/vstudio/gg316360)
 		Expires = DateTime.Now.AddDays(1)
 	});
 	
-	// Get
-	var result = _simpleVoc.Get("User/1/Name", "type==\"mischievous\"");
-	
 	// Get keys
-	var user = _simpleVoc.GetKeys("User");
+	var user = _simpleVoc.GetKeys("User", "type==\"mischievous\"");
+
+	// Get
+	var result = _simpleVoc.Get("User/1/Name");
 	
 For asynchronous access you can use SetAsync, GetAsync and GetKeysAsync wich returns a of `Task<T>`.
